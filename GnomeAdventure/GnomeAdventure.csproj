@@ -99,6 +99,42 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\Act2\BadCity.xaml.cs">
+      <DependentUpon>BadCity.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act1\Bandits.xaml.cs">
+      <DependentUpon>Bandits.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act2\CityIntro.xaml.cs">
+      <DependentUpon>CityIntro.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act1\Foraging.xaml.cs">
+      <DependentUpon>Foraging.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act2\GoodCity.xaml.cs">
+      <DependentUpon>GoodCity.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act2\GuildMasterQuests.xaml.cs">
+      <DependentUpon>GuildMasterQuests.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act2\Home.xaml.cs">
+      <DependentUpon>Home.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act1\Intro.xaml.cs">
+      <DependentUpon>Intro.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act1\Potion.xaml.cs">
+      <DependentUpon>Potion.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act2\Resolution.xaml.cs">
+      <DependentUpon>Resolution.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act1\Ruins.xaml.cs">
+      <DependentUpon>Ruins.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Act2\Town.xaml.cs">
+      <DependentUpon>Town.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -124,6 +160,54 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Scenes\Act2\BadCity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act1\Bandits.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act2\CityIntro.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act1\Foraging.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act2\GoodCity.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act2\GuildMasterQuests.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act2\Home.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act1\Intro.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act1\Potion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act2\Resolution.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act1\Ruins.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenes\Act2\Town.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
