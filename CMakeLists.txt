@@ -17,11 +17,12 @@ endif ( MSVC )
 
 
 #get libraries that we're using and put in var
-find_package(SFML 2.5 COMPONENTS graphics audio system window required)
+find_package(SFML 2.5 REQUIRED COMPONENTS graphics audio system window)
 set(ALL_SFML_LIBS "sfml-graphics sfml-audio sfml-window sfml-system")
 
 #include_directories(util)
-include_directories(include)
-add_subdirectory(tests)
+include_directories("util")
+include_directories("include")
+#add_subdirectory(tests)
 
 #add_subdirectory(game) #add this when you will actually define the game

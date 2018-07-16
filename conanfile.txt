@@ -1,0 +1,3 @@
+#use conan to make a .ycm_extra_conf.py
+[generators]
+ycm
