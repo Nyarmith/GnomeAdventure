@@ -57,6 +57,7 @@ class GameApp{
     }
 
     void update(Event e){
+      //am I in the top-most gui?
     }
 
     void draw(){
@@ -64,3 +65,4 @@ class GameApp{
 };
 
 GameApp *GameApp::GameApp_instance = 0;
+
