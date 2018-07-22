@@ -31,11 +31,11 @@ Entities make the game aware by updating the draw mutex if there is something ne
 .rotate(degree=3.14/2.0);
 
 //drawing functions
-.draw(frameNum);
+.draw(int frameNum);
 .draw(); //defaults to 0th frame
 
 //logic function
-.handle(); //method to override to determine how events are handled
+.handle(const Event &e); //method to override to determine how events are handled
 ```
 
 

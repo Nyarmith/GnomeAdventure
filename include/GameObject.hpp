@@ -20,3 +20,8 @@ class GameObject{
     int cframe_;  //actual current frame
     void refresh();
 };
+
+
+
+void GameObject::refresh(){
+}
