@@ -21,7 +21,6 @@ find_package(SFML 2.5 REQUIRED COMPONENTS graphics audio system window)
 set(ALL_SFML_LIBS "sfml-graphics sfml-audio sfml-window sfml-system")
 
 #include_directories(util)
-include_directories("util")
 include_directories("include")
 #add_subdirectory(tests)
 

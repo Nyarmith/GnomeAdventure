@@ -1,4 +1,4 @@
-#include "../util/common.hpp"
+#include "common.hpp"
 #include "Event.hpp"
 
 class GameObject{

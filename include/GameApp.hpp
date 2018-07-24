@@ -16,18 +16,24 @@ class GameApp{
       return *GameApp_instance;
     }
 
+
     /**
      * run()
      * runs the GameApp given its setup entities
      */
     void run(){
-      std::thread input_thread();
-      std::thread animation_thread();
-      while(gameRunning){
-        renderLock.lock();
-        draw();
-        renderLock.unlock();
-        usleep( DELAY );
+
+      std::unique_lock<std::mutex>  l( nf_mtx_);
+      std::thread input_thread(&GameApp::handle_input, this);
+      while(gameRunning_){
+
+        if(newframe_){
+          newframe_ = false;
+          draw();
+          usleep( DELAY );
+        } else {
+          no_newframe_.wait(l, [this](){ return newframe_ != false;} );
+        }
       }
     }
 
@@ -36,10 +42,23 @@ class GameApp{
      * safely ends the application
      */
     void exit(){
-      gameRunning = false;
+      gameRunning_ = false;
     }
 
   private:
+
+    void handle_input(){
+      //wait for event
+      
+      //process events
+      
+      //attempt to wake mutex if it cares
+      std::unique_lock<std::mutex>  l( nf_mtx_);
+    }
+
+    std::condition_variable no_newframe_;
+    std::mutex nf_mtx_;
+    bool newframe_;
     static GameApp* GameApp_instance;
 
     // These are the only entities that are being drawn
@@ -50,10 +69,10 @@ class GameApp{
     std::mutex renderLock;
     std::mutex animateLock;
 
-    bool gameRunning;
+    bool gameRunning_;
 
     GameApp(){
-      gameRunning = true;
+      gameRunning_ = true;
     }
 
     void update(Event e){
