@@ -1,15 +1,17 @@
 #include "GameObject.hpp"
 
-class GUIObject : GameObject{
-};
+namespace ay{
+  class GUIObject : GameObject{
+  };
 
-//some useful defaults:
+  //some useful defaults:
 
-class GUIExit : GUIObject{
-};
+  class GUIExit : GUIObject{
+  };
 
-class GUIMultChoice : GUIObject{
-};
+  class GUIMultChoice : GUIObject{
+  };
 
-class GUIToggle : GUIObject{
-};
+  class GUIToggle : GUIObject{
+  };
+}

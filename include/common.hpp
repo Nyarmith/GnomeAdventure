@@ -15,6 +15,7 @@
 #include <chrono>
 #include <atomic>
 #include <condition_variable>
+#include <exception>
 
 using std::string;
 using std::vector;
