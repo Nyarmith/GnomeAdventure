@@ -1,7 +1,7 @@
 #include "GameObject.hpp"
 
 namespace ay{
-  class GUIObject : GameObject{
+  class GUIObject : public GameObject{
   };
 
   //some useful defaults:

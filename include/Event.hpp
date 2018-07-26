@@ -1,4 +1,5 @@
 #include "common.hpp"
+#pragma once
 
 namespace ay{
   enum EType { MMOVE, LPRESS, LRELEASE, RPRESS, RRELEASE}; 

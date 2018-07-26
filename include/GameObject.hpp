@@ -9,10 +9,14 @@ namespace ay{
        * Constructor that takes texture-path, dimension, position, rotation
        *
        */
-      GameObject(string texture, sf::Vector2i dimension, sf::Vector2i pos, float rot);
-      GameObject(string texture){};
+      GameObject(string texFile, sf::IntRect spriteDim){
+        sf::Texture t;
+        if (!t.loadFromFile(texFile))
+          throw new std::runtime_error(std::string("ERR: file could not be loaded into texture:") + texFile);
+      };
+      GameObject(string texFile){};
       GameObject(){};
-      ~GameObject(){};
+      virtual ~GameObject(){};
 
       /**
        * set_sprite(frameNum)
@@ -21,8 +25,9 @@ namespace ay{
 
       void set_sprite(int spriteNum){
         if (tex_.find(spriteNum) == tex_.end()) throw new std::domain_error("ERR: Invalid set_sprite index");
-        if (spriteNum != fnum_)
+        if (spriteNum != fnum_){
           update_ = true;
+        }
         fnum_ = spriteNum;
       };
 
@@ -47,6 +52,9 @@ namespace ay{
         //TODO: Load sprits as per texture parameters you want with texture loading
       };
 
+      bool operator< (const GameObject &o){
+        return precedence_ > o.precedence_;
+      }
 
     protected:
       /**
@@ -59,17 +67,29 @@ namespace ay{
       sf::Vector2i dim_;
       float rot_;
       int fnum_;
-      std::map<int,sf::Texture> tex_;
+      int precedence_;
+      std::map<int,sf::Sprite> tex_;
 
-
-
-      //private interface used by GameApp
     private:
+      sf::Sprite *sprite_;
       bool update_;
       bool refresh(){
         bool ret = update_ == true;
         update_ = false;
-        return update_;
+        if (ret){
+          sprite_ = &tex_[fnum_];
+          sprite_->setPosition(pos_.x, pos_.y);
+          sprite_->setScale(dim_.x,dim_.y);
+          sprite_->setRotation(rot_);
+        }
+        return ret;
       }
+
+      virtual bool intersect(int x, int y){
+        return (pos_.x <= x && x <= pos_.x + dim_.x &&
+            pos_.y <= y && y <= pos_.y + dim_.y);
+      }
+
+      friend class GameApp;
   };
 }

@@ -1,8 +1,10 @@
-#include "GameObject.hpp"
 #include "GUIObject.hpp"
 #include "AudioStore.hpp"
 
 const long long DELAY = 25;
+const long long RESX  = 1024;
+const long long RESY  = 768;
+
 
 namespace ay{
   class GameApp{
@@ -24,6 +26,8 @@ namespace ay{
        */
       void run(){
 
+        win_.create(sf::VideoMode(RESX, RESY), "GnomeAdventure");
+
         std::unique_lock<std::mutex>  l( nf_mtx_);
         std::thread input_thread(&GameApp::handle_input, this);
         while(gameRunning_){
@@ -33,7 +37,7 @@ namespace ay{
             draw();
             xt::usleep( DELAY );
           } else {
-            no_newframe_.wait(l, [this](){ return newframe_ != false;} ); //TODO: change condition variable to another atomic operation
+            no_newframe_.wait(l, [this](){ return newframe_ != false;} );
           }
         }
         win_.close();
@@ -46,6 +50,11 @@ namespace ay{
       void exit(){
         gameRunning_ = false;
       }
+
+      void newGUI(){ std::vector<GameObject*> t; GUIObjects_.push(t); }
+      void popGUI(){ GUIObjects_.pop(); }
+      void addGUI(GameObject *o){ GUIObjects_.top().push_back(o); };
+      void addObj(GameObject *o){ gameObjs_.push_back(o); }
 
     private:
 
@@ -68,10 +77,28 @@ namespace ay{
         auto pos = sf::Mouse::getPosition(win_);
         e.y = pos.y;
         e.x = pos.x;
-
         bool update = false;
-        //TODO: Update entities and handle updates on top-most stack
-        //set newframe_ to true if something triggers a new frame
+
+        //game entities
+        if (GUIObjects_.size() <= 1){
+          for (int i=0; i < gameObjs_.size(); ++i){
+            if (!update && gameObjs_[i]->intersect(e.x,e.y)){
+              gameObjs_[i]->handle(e);
+              update = gameObjs_[i]->refresh();
+            }
+          }
+        }
+
+        //GUI entities
+        if (!GUIObjects_.empty()){
+          auto &set = GUIObjects_.top();
+          for (int i=0; i<set.size(); ++i){
+            if (!update && set[i]->intersect(e.x,e.y)){
+              set[i]->handle(e);
+              update = set[i]->refresh();
+            }
+          }
+        }
 
 
         //attempt to wake mutex if it cares
@@ -83,7 +110,7 @@ namespace ay{
 
       bool gameRunning_;
 
-      GameApp(){
+      GameApp() {
         gameRunning_ = true;
       }
 
@@ -92,6 +119,24 @@ namespace ay{
       }
 
       void draw(){
+        //clear screen
+        win_.clear(sf::Color::White);
+        
+        //game entities
+        if (GUIObjects_.size() <= 1){
+          for (int i=0; i < gameObjs_.size(); ++i){
+            //sfml draw
+            win_.draw(*gameObjs_[i]->sprite_);
+          }
+        }
+
+        //GUI entities
+        if (!GUIObjects_.empty()){
+          auto &set = GUIObjects_.top();
+          for (int i=0; i<set.size(); ++i){
+            win_.draw(*set[i]->sprite_);
+          }
+        }
       }
 
       //mutex-related
@@ -103,12 +148,12 @@ namespace ay{
       static GameApp* GameApp_instance;
 
       // These are the only entities that are being drawn
-      std::stack< std::queue<GUIObject> > GUIObjects_;  //GUIs can overalp indefinitely
-      vector<GameObject>                  gameObjs_;    //But game-related entites must be loaded/unloaded
+      std::stack< std::vector<GameObject*> > GUIObjects_;  //GUIs can overalp indefinitely
+      vector<GameObject*>                  gameObjs_;    //But game-related entites must be loaded/unloaded
 
 
       //sfml objects
-      sf::Window win_;
+      sf::RenderWindow win_;
   };
 
   GameApp *GameApp::GameApp_instance = 0;
