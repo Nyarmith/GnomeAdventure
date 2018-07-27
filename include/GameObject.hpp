@@ -51,6 +51,7 @@ namespace ay{
        */
       void set_size(int w, int h) { dim_ = sf::Vector2i(w,h); update_ = true; };
 
+
       /**
        * register_sprite
        * loads a texture into a specified frame-number for later switching
@@ -74,7 +75,8 @@ namespace ay{
        * handle(const Event &e)
        * must be inherited to create object handler
        */
-      virtual void handle(const Event &e) = 0;
+      virtual void update(float dt){ };
+      virtual void handle(const Event &e){ };
 
       sf::Vector2i pos_;
       sf::Vector2i dim_;

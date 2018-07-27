@@ -27,17 +27,14 @@ namespace ay{
       void run(){
         win_.create(sf::VideoMode(RESX, RESY), "GnomeAdventure");
 
-        std::unique_lock<std::mutex>  l( nf_mtx_);
-        std::thread input_thread(&GameApp::handle_input, this);
+        sf::Clock timer;
         while(gameRunning_){
 
-          if(newframe_){
-            newframe_ = false;
-            draw();
-            xt::usleep( DELAY );
-          } else {
-            no_newframe_.wait(l);
-          }
+          float dt = timer.getElapsedTime().asSeconds();
+          poll();
+          update(dt);
+          draw();
+          xt::usleep( DELAY - dt );
         }
         win_.close();
       }
@@ -50,7 +47,6 @@ namespace ay{
         gameRunning_ = false;
       }
 
-      void forceDraw(){ newframe_ = true; no_newframe_.notify_one(); };
       void newGUI(){ std::vector<GameObject*> t; GUIObjects_.push(t); }
       void popGUI(){ GUIObjects_.pop(); }
       void addGUI(GameObject *o){ GUIObjects_.top().push_back(o); };
@@ -63,63 +59,65 @@ namespace ay{
        * runs asynchronously in its own thread, waits for input, 
        * and notifies the main event loop if redrawing is necessary
        */
-      void handle_input(){
+      void poll(){
         //wait for event
-        while (gameRunning_){
-          bool update = false;
-          sf::Event evt;
-          win_.waitEvent(evt);
-          //is user closing?
-          if (evt.type == sf::Event::Closed){
-            exit();
-            update = true;
-          }
+        bool update = false;
+        sf::Event evt;
+        win_.waitEvent(evt);
+        //is user closing?
+        if (evt.type == sf::Event::Closed){
+          exit();
+          update = true;
+        }
 
-          //process events
-          Event e = txEvt(evt);
-          auto pos = sf::Mouse::getPosition(win_);
-          e.y = pos.y;
-          e.x = pos.x;
+        //process events
+        Event e = txEvt(evt);
+        auto pos = sf::Mouse::getPosition(win_);
+        e.y = pos.y;
+        e.x = pos.x;
 
-          //game entities
-          if (GUIObjects_.size() <= 1){
-            for (int i=0; i < gameObjs_.size(); ++i){
-              if (!update && gameObjs_[i]->intersect(e.x,e.y)){
-                gameObjs_[i]->handle(e);
-                update = gameObjs_[i]->refresh();
-              }
+        //game entities
+        if (GUIObjects_.size() <= 1){
+          for (int i=0; i < gameObjs_.size(); ++i){
+            if (!update && gameObjs_[i]->intersect(e.x,e.y)){
+              gameObjs_[i]->handle(e);
+              update = gameObjs_[i]->refresh();
             }
           }
+        }
 
-          //GUI entities
-          if (!GUIObjects_.empty()){
-            auto &set = GUIObjects_.top();
-            for (int i=0; i<set.size(); ++i){
-              if (!update && set[i]->intersect(e.x,e.y)){
-                set[i]->handle(e);
-                update = set[i]->refresh();
-              }
+        //GUI entities
+        if (!GUIObjects_.empty()){
+          auto &set = GUIObjects_.top();
+          for (int i=0; i<set.size(); ++i){
+            if (!update && set[i]->intersect(e.x,e.y)){
+              set[i]->handle(e);
+              update = set[i]->refresh();
             }
-          }
-
-
-          //attempt to wake mutex if it cares
-          if (update){
-            newframe_ = true;
-            no_newframe_.notify_one();
           }
         }
       }
 
-      std::atomic<bool> gameRunning_;
 
       GameApp() {
         gameRunning_ = true;
-        newframe_ = true;
       }
 
-      void update(Event e){
-        //am I in the top-most gui?
+      void update(float dt){
+        //game entities
+        if (GUIObjects_.size() <= 1){
+          for (int i=0; i < gameObjs_.size(); ++i){
+            gameObjs_[i]->update(dt);
+          }
+        }
+
+        //GUI entities
+        if (!GUIObjects_.empty()){
+          auto &set = GUIObjects_.top();
+          for (int i=0; i<set.size(); ++i){
+            set[i]->update(dt);
+          }
+        }
       }
 
       void draw(){
@@ -144,10 +142,8 @@ namespace ay{
         win_.display();
       }
 
-      //mutex-related
-      std::condition_variable no_newframe_;
-      std::mutex nf_mtx_;
-      std::atomic<bool> newframe_;
+      //is game running
+      bool gameRunning_;
 
       //singleton
       static GameApp* GameApp_instance;
