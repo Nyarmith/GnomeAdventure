@@ -10,12 +10,14 @@ namespace ay{
        *
        */
       GameObject(string texFile, sf::IntRect spriteDim){
-        sf::Texture t;
-        if (!t.loadFromFile(texFile))
-          throw new std::runtime_error(std::string("ERR: file could not be loaded into texture:") + texFile);
+        precedence_ = 1;
+        register_sprite(texFile, spriteDim, 0);
+        set_sprite(0);
+        dim_.x = spriteDim.width;
+        dim_.y = spriteDim.height;
+        update_=true;
+        refresh();
       };
-      GameObject(string texFile){};
-      GameObject(){};
       virtual ~GameObject(){};
 
       /**
@@ -38,6 +40,12 @@ namespace ay{
       void set_pos(int x, int y)  { pos_ = sf::Vector2i(x,y); update_ = true; };
 
       /**
+       * set_rot(radian)
+       * Sets the rotation value
+       */
+      void set_rot(float r) { rot_ = r; }
+
+      /**
        * set_size(h,w)
        * sets height and width of currently displayed sprite
        */
@@ -47,9 +55,14 @@ namespace ay{
        * register_sprite
        * loads a texture into a specified frame-number for later switching
        */
-      void register_sprite(string path_to_texture, int num){
+      void register_sprite(string path_to_texture, sf::IntRect spriteDim, int num){
         if (tex_.find(num) != tex_.end()) throw new std::domain_error("ERR: Texture index already taken");
         //TODO: Load sprits as per texture parameters you want with texture loading
+        sf::Texture &t = tex_[num];
+        if (!t.loadFromFile(path_to_texture))
+          throw new std::runtime_error(std::string("ERR: file could not be loaded into texture:") + path_to_texture);
+        spr_[num].setTexture(t);
+        spr_[num].setTextureRect(spriteDim);
       };
 
       bool operator< (const GameObject &o){
@@ -68,7 +81,8 @@ namespace ay{
       float rot_;
       int fnum_;
       int precedence_;
-      std::map<int,sf::Sprite> tex_;
+      std::map<int,sf::Sprite> spr_;
+      std::map<int,sf::Texture> tex_;
 
     private:
       sf::Sprite *sprite_;
@@ -77,7 +91,7 @@ namespace ay{
         bool ret = update_ == true;
         update_ = false;
         if (ret){
-          sprite_ = &tex_[fnum_];
+          sprite_ = &spr_[fnum_];
           sprite_->setPosition(pos_.x, pos_.y);
           sprite_->setScale(dim_.x,dim_.y);
           sprite_->setRotation(rot_);
