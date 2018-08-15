@@ -5,6 +5,7 @@ const long long DELAY = 25;
 const long long RESX  = 1024;
 const long long RESY  = 768;
 
+//TODO: Hide implementation details of GameApp, possibly even factor out dependency w/ GameObjectImpl
 
 namespace ay{
   class GameApp{
@@ -96,6 +97,7 @@ namespace ay{
             }
           }
         }
+        //TODO: Replace input with observer pattern or system to be fleshed out at lower level
       }
 
 
@@ -128,7 +130,7 @@ namespace ay{
         if (GUIObjects_.size() <= 1){
           for (int i=0; i < gameObjs_.size(); ++i){
             //sfml draw
-            win_.draw(*gameObjs_[i]->sprite_);
+            win_.draw(*gameObjs_[i]->impl->sprite_);
           }
         }
 
@@ -136,7 +138,7 @@ namespace ay{
         if (!GUIObjects_.empty()){
           auto &set = GUIObjects_.top();
           for (int i=0; i<set.size(); ++i){
-            win_.draw(*set[i]->sprite_);
+            win_.draw(*set[i]->impl->sprite_);
           }
         }
         win_.display();

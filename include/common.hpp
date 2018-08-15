@@ -24,5 +24,4 @@ namespace xt{
   void usleep(long long t){
     std::this_thread::sleep_for(std::chrono::milliseconds(t));
   }
-
 }

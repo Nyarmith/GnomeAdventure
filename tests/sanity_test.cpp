@@ -2,15 +2,17 @@
 #include "../include/GameApp.hpp"
 
 struct BG : public ay::GameObject{
-  BG (std::string file, sf::IntRect dim) : ay::GameObject(file, dim) { };
+  BG (std::string file, sf::IntRect dim) : ay::GameObject(file) { };
   void handle(const ay::Event &e){};
+  void update(float dt) {};
 };
 
 struct Birb : public ay::GameObject{
-  Birb (std::string file, sf::IntRect dim) : ay::GameObject(file, dim) { };
+  Birb (std::string file, sf::IntRect dim) : ay::GameObject(file) { };
   void handle(const ay::Event &e){
     set_pos(rand()%1024, rand()%768);
   };
+  void update(float dt) {};
 };
 
 int main(){
