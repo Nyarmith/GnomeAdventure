@@ -15,32 +15,32 @@ namespace ay{
     int fnum_{-1};
     int precedence_{5};
 
-    std::map<int,sf::Sprite> spr_;
+    std::map<int,sf::Sprite>  spr_;
     std::map<int,sf::Texture> tex_;
     sf::Sprite *sprite_;
 
-    bool update_; //flag indicating redrawing is necessary
+    bool changed_{false}; //flag indicating redrawing is necessary
 
 
     void set_sprite(int spriteNum){
       if (tex_.find(spriteNum) == tex_.end()) throw new std::domain_error("ERR: Invalid set_sprite index");
       if (spriteNum != fnum_){
-        update_ = true;
+        changed_ = true;
       }
       dim_ = tex_[spriteNum].getSize();
       fnum_ = spriteNum;
     };
 
-    void set_pos(int x, int y)  { pos_ = sf::Vector2i(x,y); update_ = true; };
+    void set_pos(int x, int y)  { pos_ = sf::Vector2i(x,y); changed_ = true; };
 
-    void set_rot(float r) { rot_ = r; update_ = true;}
+    void set_rot(float r) { rot_ = r; changed_ = true;}
 
     void set_size(int w, int h) {
       scale_ = sf::Vector2i(
         w/static_cast<float>(dim_.x),
         h/static_cast<float>(dim_.y));
 
-      update_ = true;
+      changed_ = true;
     };
 
 
@@ -61,8 +61,8 @@ namespace ay{
     }
 
     bool refresh(){
-      bool ret = update_ == true;
-      update_ = false;
+      bool ret = changed_ == true;
+      changed_ = false;
       if (ret){
         sprite_ = &spr_[fnum_];
         sprite_->setPosition(pos_.x, pos_.y);
@@ -83,7 +83,15 @@ namespace ay{
       set_sprite(0);
       refresh();
       //dim_ = sprite_->getTexture()->getSize(); //first texture determines default size
-      update_ = true;
+      changed_ = true;
     };
+
+    string str(){
+      std::stringstream ss;
+      ss << "GameObjectImpl - textures : " << tex_.size()
+         << " sprites: " << spr_.size() << " pos: " << pos_.x << " " << pos_.y
+         << " scale: " << scale_.x << " " << scale_.y << " rot: " << rot_;
+      return ss.str();
+    }
   };
 }

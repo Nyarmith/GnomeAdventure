@@ -13,9 +13,11 @@
 #include <stack>
 #include <queue>
 #include <chrono>
+#include <sstream>
 #include <atomic>
 #include <condition_variable>
 #include <exception>
+#include "trace.hpp"
 
 using std::string;
 using std::vector;

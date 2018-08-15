@@ -28,6 +28,8 @@ namespace ay{
       void run(){
         win_.create(sf::VideoMode(RESX, RESY), "GnomeAdventure");
 
+        LOG_DEBUG("Created window");
+
         sf::Clock timer;
         while(gameRunning_){
 
@@ -48,9 +50,6 @@ namespace ay{
         gameRunning_ = false;
       }
 
-      void newGUI(){ std::vector<GameObject*> t; GUIObjects_.push(t); }
-      void popGUI(){ GUIObjects_.pop(); }
-      void addGUI(GameObject *o){ GUIObjects_.top().push_back(o); };
       void addObj(GameObject *o){ gameObjs_.push_back(o); }
 
     private:
@@ -78,25 +77,13 @@ namespace ay{
         e.x = pos.x;
 
         //game entities
-        if (GUIObjects_.size() <= 1){
-          for (int i=0; i < gameObjs_.size(); ++i){
-            if (!update && gameObjs_[i]->intersect(e.x,e.y)){
-              gameObjs_[i]->handle(e);
-              update = gameObjs_[i]->refresh();
-            }
+        for (int i=0; i < gameObjs_.size(); ++i){
+          if (!update && gameObjs_[i]->intersect(e.x,e.y)){
+            gameObjs_[i]->handle(e);
+            update = gameObjs_[i]->refresh();
           }
         }
 
-        //GUI entities
-        if (!GUIObjects_.empty()){
-          auto &set = GUIObjects_.top();
-          for (int i=0; i<set.size(); ++i){
-            if (!update && set[i]->intersect(e.x,e.y)){
-              set[i]->handle(e);
-              update = set[i]->refresh();
-            }
-          }
-        }
         //TODO: Replace input with observer pattern or system to be fleshed out at lower level
       }
 
@@ -107,19 +94,10 @@ namespace ay{
 
       void update(float dt){
         //game entities
-        if (GUIObjects_.size() <= 1){
-          for (int i=0; i < gameObjs_.size(); ++i){
-            gameObjs_[i]->update(dt);
-          }
+        for (int i=0; i < gameObjs_.size(); ++i){
+          gameObjs_[i]->update(dt);
         }
 
-        //GUI entities
-        if (!GUIObjects_.empty()){
-          auto &set = GUIObjects_.top();
-          for (int i=0; i<set.size(); ++i){
-            set[i]->update(dt);
-          }
-        }
       }
 
       void draw(){
@@ -127,20 +105,12 @@ namespace ay{
         win_.clear(sf::Color::White);
         
         //game entities
-        if (GUIObjects_.size() <= 1){
-          for (int i=0; i < gameObjs_.size(); ++i){
-            //sfml draw
-            win_.draw(*(gameObjs_[i]->impl->sprite_));
-          }
+        for (auto& obj : gameObjs_){
+          //sfml draw
+          win_.draw(*(obj->impl->sprite_));
+          LOG_DEBUG("Drawing " + obj->impl->str());
         }
 
-        //GUI entities
-        if (!GUIObjects_.empty()){
-          auto &set = GUIObjects_.top();
-          for (int i=0; i<set.size(); ++i){
-            win_.draw(*(set[i]->impl->sprite_));
-          }
-        }
         win_.display();
       }
 
@@ -151,7 +121,6 @@ namespace ay{
       static GameApp* GameApp_instance;
 
       // These are the only entities that are being drawn
-      std::stack< std::vector<GameObject*> > GUIObjects_;  //GUIs can overalp indefinitely
       vector<GameObject*>                    gameObjs_;    //But game-related entites must be loaded/unloaded
 
 
