@@ -12,7 +12,7 @@ namespace ay{
     sf::Vector2i pos_{0,0};
     sf::Vector2i scale_{1,1};
     float rot_{0};
-    int fnum_{0};
+    int fnum_{-1};
     int precedence_{5};
 
     std::map<int,sf::Sprite> spr_;
@@ -81,7 +81,8 @@ namespace ay{
     GameObjectImpl(string texFile){
       register_sprite(texFile, 0);
       set_sprite(0);
-      dim_ = sprite_->getTexture()->getSize(); //first texture determines default size
+      refresh();
+      //dim_ = sprite_->getTexture()->getSize(); //first texture determines default size
       update_ = true;
     };
   };

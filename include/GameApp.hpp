@@ -130,7 +130,7 @@ namespace ay{
         if (GUIObjects_.size() <= 1){
           for (int i=0; i < gameObjs_.size(); ++i){
             //sfml draw
-            win_.draw(*gameObjs_[i]->impl->sprite_);
+            win_.draw(*(gameObjs_[i]->impl->sprite_));
           }
         }
 
@@ -138,7 +138,7 @@ namespace ay{
         if (!GUIObjects_.empty()){
           auto &set = GUIObjects_.top();
           for (int i=0; i<set.size(); ++i){
-            win_.draw(*set[i]->impl->sprite_);
+            win_.draw(*(set[i]->impl->sprite_));
           }
         }
         win_.display();
