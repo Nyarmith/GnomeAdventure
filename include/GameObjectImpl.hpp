@@ -66,7 +66,7 @@ namespace ay{
       if (ret){
         sprite_ = &spr_[fnum_];
         sprite_->setPosition(pos_.x, pos_.y);
-        sprite_->setScale(dim_.x,dim_.y);
+        sprite_->setScale(scale_.x,scale_.y);
         sprite_->setRotation(rot_);
       }
       return ret;

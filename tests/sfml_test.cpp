@@ -2,7 +2,9 @@
 
 
 int main(){
-  sf::RenderWindow win(sf::VideoMode(1024,768), "HomeAdventure");
+  sf::RenderWindow win;
+  win.create(sf::VideoMode(1024,768), "HomeAdventure");
+  win.clear();
   sf::Texture bg;
   sf::Texture fg;
   bg.loadFromFile("assets/Sample_BG.png");

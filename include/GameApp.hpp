@@ -20,7 +20,6 @@ namespace ay{
         return *GameApp_instance;
       }
 
-
       /**
        * run()
        * runs the GameApp given its setup entities
@@ -102,7 +101,7 @@ namespace ay{
 
       void draw(){
         //clear screen
-        win_.clear(sf::Color::White);
+        win_.clear();
         
         //game entities
         for (auto& obj : gameObjs_){

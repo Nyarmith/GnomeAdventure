@@ -10,7 +10,8 @@ struct BG : public ay::GameObject{
 struct Birb : public ay::GameObject{
   Birb (std::string file) : ay::GameObject(file) { };
   void handle(const ay::Event &e){
-    //set_pos(rand()%1024, rand()%768);
+    if (e.e == ay::EType::LPRESS)
+      set_pos(rand()%1024, rand()%768);
   };
   void update(float dt) {};
 };
@@ -18,7 +19,6 @@ struct Birb : public ay::GameObject{
 int main(){
   BG myBG("assets/Sample_BG.png");
   myBG.set_precedence(0);
-  myBG.set_pos(20,20);
 
   Birb myFG("assets/Sample_Bird.png");
   myFG.set_pos(50,50);
