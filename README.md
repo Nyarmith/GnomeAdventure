@@ -20,11 +20,10 @@ GnomeAdventure Game:
 
 
 ## Game-Engine Structure
-The fmwk is asynchronous and assumes there will mostly be the same screen, perhaps with a few animations, as such the main render loop waits for new things to happen before it redraws a scene. New things to draw can be introduced either via user input (e.g. a menu click) or specific animations (e.g. clicking on an object makes it spin for a few frames)
+Main feature of the engine is that it doesn't redraw things unless necessary.
 
 The structure is thus reflected as such:
-* User input is handled in its own thread
-* Animations are handled in their own thread
+* Animations are handled by a state-machine object
 
 The main loop is thus structured roughly as follows:
 ```
@@ -38,6 +37,12 @@ while (gameRunning){
 ```
 
 TODO:
+- Try something nicer than a pointer vector for objects maybe
+- Input handler
+- Make virtual handle() method in GameAPp
+- Let objects subscribe to certain kinds of click events
+- Fix drawing issue
+- Separate source more nicely (ask Chris about this)
 - Think through input handling more thoroughly
 - Think through resolution scaling more thoroughly
 - Add logging

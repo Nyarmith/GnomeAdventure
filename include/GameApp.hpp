@@ -15,9 +15,9 @@ namespace ay{
        * Gets instance of the game being run
        */
       static GameApp& instance(){
-        if (!GameApp_instance)
-          GameApp_instance = new GameApp();
-        return *GameApp_instance;
+        if (!GameApp_instance_)
+          GameApp_instance_ = new GameApp();
+        return *GameApp_instance_;
       }
 
       /**
@@ -54,7 +54,7 @@ namespace ay{
     private:
 
       /**
-       * handle_input()
+       * poll()
        * runs asynchronously in its own thread, waits for input, 
        * and notifies the main event loop if redrawing is necessary
        */
@@ -62,28 +62,30 @@ namespace ay{
         //wait for event
         bool update = false;
         sf::Event evt;
-        win_.waitEvent(evt);
-        //is user closing?
+
+        //is there a new event this frame?
+        if (!win_.pollEvent(evt))
+          return;
+
+        //is that event the user closing?
         if (evt.type == sf::Event::Closed){
           exit();
           update = true;
         }
 
-        //process events
+        //else map it to our internal events
         Event e = txEvt(evt);
         auto pos = sf::Mouse::getPosition(win_);
         e.y = pos.y;
         e.x = pos.x;
 
-        //game entities
+        //find first guy that intersects
         for (int i=0; i < gameObjs_.size(); ++i){
           if (!update && gameObjs_[i]->intersect(e.x,e.y)){
             gameObjs_[i]->handle(e);
             update = gameObjs_[i]->refresh();
           }
         }
-
-        //TODO: Replace input with observer pattern or system to be fleshed out at lower level
       }
 
 
@@ -113,20 +115,16 @@ namespace ay{
         win_.display();
       }
 
-      //is game running
-      bool gameRunning_;
-
+      
+      // -- members --
+      bool gameRunning_;  //is game running
       //singleton
-      static GameApp* GameApp_instance;
-
+      static GameApp* GameApp_instance_;
       // These are the only entities that are being drawn
-      vector<GameObject*>                    gameObjs_;    //But game-related entites must be loaded/unloaded
-
-
-      //sfml objects
+      vector<GameObject*> gameObjs_;  //But game-related entites must be loaded/unloaded
       sf::RenderWindow win_;
   };
 
-  GameApp *GameApp::GameApp_instance = 0;
+  GameApp *GameApp::GameApp_instance_ = 0;
 
 }
