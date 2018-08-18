@@ -3,14 +3,16 @@
 
 namespace ay{
 
+  class GameApp;
+
   struct GameObjectImpl{
     bool operator< (const GameObjectImpl &o){
       return precedence_ > o.precedence_;
     }
 
     sf::Vector2u dim_; //dimensions of current texture
-    sf::Vector2i pos_{0,0};
-    sf::Vector2i scale_{1,1};
+    sf::Vector2f pos_{0,0};
+    sf::Vector2f scale_{1,1};
     float rot_{0};
     int fnum_{-1};
     int precedence_{5};
@@ -31,12 +33,14 @@ namespace ay{
       fnum_ = spriteNum;
     };
 
-    void set_pos(int x, int y)  { pos_ = sf::Vector2i(x,y); changed_ = true; };
+    void set_pos(float x, float y)  { pos_ = sf::Vector2f(x,y); changed_ = true; };
+
+    sf::Vector2f get_pos() { return pos_;}
 
     void set_rot(float r) { rot_ = r; changed_ = true;}
 
     void set_size(int w, int h) {
-      scale_ = sf::Vector2i(
+      scale_ = sf::Vector2f(
         w/static_cast<float>(dim_.x),
         h/static_cast<float>(dim_.y));
 

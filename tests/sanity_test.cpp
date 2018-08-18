@@ -2,17 +2,20 @@
 #include "../include/GameApp.hpp"
 
 struct BG : public ay::GameObject{
-  BG (std::string file) : ay::GameObject(file) { };
-  void handle(const ay::Event &e){};
+  BG (std::string file) : ay::GameObject(file) {};
+
   void update(float dt) {};
 };
 
 struct Birb : public ay::GameObject{
-  Birb (std::string file) : ay::GameObject(file) { };
-  void handle(const ay::Event &e){
-    if (e.e == ay::EType::LPRESS)
-      set_pos(rand()%1024, rand()%768);
+  Birb (std::string file) : ay::GameObject(file) {
+
+    subscribe(ay::EType::LPRESS,
+              [&](auto &e){
+      set_pos(rand()%700+20, rand()%700+20);
+    });
   };
+
   void update(float dt) {};
 };
 

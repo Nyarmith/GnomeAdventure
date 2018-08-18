@@ -19,6 +19,11 @@ namespace ay{
     /** set_pos(x,y)
      *  Sets the sprite position, relative to the top-left part of the screen */
     void set_pos(int x, int y);
+    void set_pos(sf::Vector2f p);
+
+    /** set_pos(x,y)
+     *  Gets the current sprite position, relative to the top-left part of the screen */
+    sf::Vector2f get_pos();
 
     /** set_rot(r)
      *  Sets the rotation of the sprite in radians */
@@ -41,16 +46,20 @@ namespace ay{
     virtual void update(float dt) = 0;
 
     /**
-     * handle(const Event &e)
-     * override this to define how object handles input */
-    virtual void handle(const Event &e) = 0;
+     * subscribe(const Event &e)
+     * subscribe to an event type and define what your object does when it happens */
+    virtual void subscribe(const EType evt_type, 
+                           std::function<void(const Event &e)> handler,
+                           std::function<bool(const Event &e)> filter = [](auto in){return true;},
+                           int precedence=0,
+                           bool propagate_evt=true);
 
 
+    virtual bool intersect(int x, int y);
 
   private:
     GameObjectImpl* impl;
     bool refresh();
-    bool intersect(int x, int y);
     bool operator< (const GameObject &o);
     friend class GameApp;
   };
@@ -67,6 +76,10 @@ namespace ay{
 
   void GameObject::set_pos(int x, int y)  {
     impl->set_pos(x,y);
+  }
+
+  void GameObject::set_pos(sf::Vector2f p)  {
+    impl->set_pos(p.x,p.y);
   }
 
   void GameObject::set_rot(float r) {
@@ -97,6 +110,11 @@ namespace ay{
   //TODO: remove this when input-handler is factored out
   bool GameObject::intersect(int x, int y){
     return impl->intersect(x,y);
+  }
+
+  //TODO: Replace sf::Vector with something else
+  sf::Vector2f GameObject::get_pos(){
+    return impl->get_pos();
   }
 
   GameObject::~GameObject(){ delete impl; }
