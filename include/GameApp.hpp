@@ -14,7 +14,7 @@ namespace ay{
        */
       static GameApp& instance(){
         if (!GameApp_instance_)
-          GameApp_instance_ = new GameApp();
+          GameApp_instance_ = new GameApp;
         return *GameApp_instance_;
       }
 
@@ -129,7 +129,7 @@ namespace ay{
       sf::RenderWindow win_;
   };
 
-  GameApp *GameApp::GameApp_instance_ = 0;
+  GameApp *GameApp::GameApp_instance_ = nullptr;
 
 
 

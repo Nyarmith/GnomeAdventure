@@ -19,6 +19,7 @@
 #include <condition_variable>
 #include <functional>
 #include <exception>
+#include <unordered_map>
 #include "trace.hpp"
 
 using std::string;
