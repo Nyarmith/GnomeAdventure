@@ -105,5 +105,15 @@ namespace ay{
     return *AudioStore_instance;
   }
 
+  /*AudioStore::~AudioStore() {
+      for (auto&& snd : sounds) {
+        snd.second.second.stop();
+      }
+      for (auto&& snd : tracks) {
+        snd.second.stop();
+      }
+      xt::usleep(300); //wait for audio stream to close
+  }*/
+
   AudioStore *AudioStore::AudioStore_instance = nullptr;
 }

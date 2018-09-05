@@ -95,8 +95,20 @@ namespace ay{
         }
       }
 
-      GameApp() {
+      GameApp(){
         gameRunning_ = true;
+      }
+
+      void sort(){  //sort entities by draw precedence each frame
+        int i=0;
+        while (i < gameObjs_.size()){ //insertion sort is fast for small nearly-sorted sets
+          int j=i;
+          while (j>0 && gameObjs_[j-1] > gameObjs_[j]){
+            std::swap(gameObjs_[j-1], gameObjs_[j]);
+            --j;
+          }
+          ++i;
+        }
       }
 
       void update(float dt){
@@ -105,6 +117,7 @@ namespace ay{
           gameObjs_[i]->update(dt);
           gameObjs_[i]->refresh();
         }
+        sort();
       }
 
       void draw(){
@@ -127,6 +140,7 @@ namespace ay{
       vector<GameObject*> gameObjs_;  //But game-related entites must be loaded/unloaded
       vector<EvtHandler> EvtHandlers_;  //But game-related entites must be loaded/unloaded
       sf::RenderWindow win_;
+
   };
 
   GameApp *GameApp::GameApp_instance_ = nullptr;
