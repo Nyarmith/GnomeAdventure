@@ -1,21 +1,60 @@
 #include "../util/common.hpp"
 
-//Hopefully this implementation will be cleaner than the c# version
 
-class Node{
-}
 
-class BinOp{
-}
+namespace agf{
+  enum Tokens { SEMI, EQ,  PEQ,  SEQ,   MEQ, DEQ, OR, AND, GT, GEQ, LT, LEQ,
+                ISEQ, NEQ, PLUS, MINUS, MUL, DIV, LPAREN, RPAREN, ID, INT, EOF };
 
-class UnOp{
-}
+  struct Token
+  {
+    Tokens type;
+    string value;
+    Token(Tokens t_, string v_) : type(t_), value(v_) { }
+    Token() {}
+  }
 
-class AGFLexer{
-}
+  class NodeVisitor { string visit(); }
+  class Visitable { string accept(NodeVisitor visitor); }
 
-class AGFParser{
-}
 
-class AGFInterpreter{
+  struct AST
+  {
+  }
+
+  struct BinOp : AST
+  {
+  }
+
+  struct UnOp : AST
+  {
+  }
+  
+  struct Var : AST
+  {
+  }
+
+  struct Int : AST
+  {
+  }
+
+  struct Assign : AST
+  {
+  }
+
+  struct Compound : AST
+  {
+  }
+
+  struct AGFLexer
+  {
+  }
+
+  struct AGFParser
+  {
+  }
+
+  struct AGFInterpreter
+  {
+  }
 }
